@@ -1,0 +1,7 @@
+.vscode
+vendor
+debug
+gomon_spawn
+.idea
+.DS_Store
+

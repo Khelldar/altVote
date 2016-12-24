@@ -1,0 +1,10 @@
+hash: f0064b2e9e7b98ded36d6ee56ce64b075e24bc82f758467abac723bc71ea8641
+updated: 2016-12-24T13:29:18.812677393-07:00
+imports:
+- name: github.com/jtolds/gls
+  version: 8ddce2a84170772b95dd5d576c48d517b22cac63
+- name: github.com/smartystreets/assertions
+  version: 26acb9229f421449ac63d014995b282d59261a8b
+- name: github.com/smartystreets/goconvey
+  version: 3c2572876754c4669ae7417b219f0b30a29b32c7
+devImports: []
