@@ -39,6 +39,7 @@ func runRound(candidates []string, bins map[string]int64, ballots [][]string, re
 
 	if winner != "" {
 		results.Winner = winner
+		return nil
 	}
 
 	//looks like we don't have a winner - drop the person in last and re-runRound
@@ -54,7 +55,6 @@ func runRound(candidates []string, bins map[string]int64, ballots [][]string, re
 
 func getWinner(bins map[string]int64) (string, error) {
 	var totalBallots float64
-
 	for _, votes := range bins {
 		totalBallots += float64(votes)
 	}

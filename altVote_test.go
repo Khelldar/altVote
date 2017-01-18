@@ -95,7 +95,7 @@ func runTest(expectedWinner string, expectedNumberOfRounds int, ballots [][]stri
 	fmt.Println(candidates)
 	fmt.Println("ballots:")
 	fmt.Println(ballots)
-	results := GetResults(candidates, ballots)
+	results, _ := GetResults(candidates, ballots)
 	So(len(results.Rounds), ShouldEqual, expectedNumberOfRounds)
 	So(results.Winner, ShouldEqual, expectedWinner)
 }
