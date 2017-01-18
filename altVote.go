@@ -1,10 +1,10 @@
 package altVote
 
-import (
-	"fmt"
-)
+import "errors"
 
-func GetResults(candidates []string, ballots [][]string) Results {
+var NoVotes = errors.New("No one votes for any of the candidates")
+
+func GetResults(candidates []string, ballots [][]string) (Results, error) {
 	//set up the bins
 	bins := map[string]int64{}
 	for _, candidate := range candidates {
@@ -13,12 +13,11 @@ func GetResults(candidates []string, ballots [][]string) Results {
 
 	//results will be mutated as runRound gets called
 	results := new(Results)
-	runRound(candidates, bins, ballots, results)
-	fmt.Println(results)
-	return *results
+	err := runRound(candidates, bins, ballots, results)
+	return *results, err
 }
 
-func runRound(candidates []string, bins map[string]int64, ballots [][]string, results *Results) {
+func runRound(candidates []string, bins map[string]int64, ballots [][]string, results *Results) error {
 	//get the totals for this round
 	for _, ballot := range ballots {
 		for _, vote := range ballot {
@@ -33,10 +32,13 @@ func runRound(candidates []string, bins map[string]int64, ballots [][]string, re
 	results.Rounds = append(results.Rounds, copyBins(bins))
 
 	//check to see if there's a winner yet
-	winner := getWinner(bins)
+	winner, err := getWinner(bins)
+	if err != nil {
+		return err
+	}
+
 	if winner != "" {
 		results.Winner = winner
-		return
 	}
 
 	//looks like we don't have a winner - drop the person in last and re-runRound
@@ -46,24 +48,28 @@ func runRound(candidates []string, bins map[string]int64, ballots [][]string, re
 	for i := range bins {
 		bins[i] = 0
 	}
-	runRound(candidates, bins, ballots, results)
+	return runRound(candidates, bins, ballots, results)
 
 }
 
-func getWinner(bins map[string]int64) string {
+func getWinner(bins map[string]int64) (string, error) {
 	var totalBallots float64
 
 	for _, votes := range bins {
 		totalBallots += float64(votes)
 	}
 
+	if totalBallots == 0 {
+		return "", NoVotes
+	}
+
 	for candidate, votes := range bins {
 		if float64(votes)/totalBallots > .5 {
-			return candidate
+			return candidate, nil
 		}
 	}
 
-	return ""
+	return "", nil
 }
 
 //need to pass candidates here so we can deterministically get a loser in the event of a tie - lower index loses
